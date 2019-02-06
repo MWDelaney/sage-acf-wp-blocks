@@ -44,3 +44,6 @@ Add blade templates to `views/blocks` which get and use ACF data. Each block req
   }
 </style>
 ```
+
+## Creating ACF fields
+Once a block is created you'll be able to assign ACF fields to it using the standard Custom Fields interface in WordPress. We recommend using [sage-advanced-custom-fields](https://github.com/MWDelaney/sage-advanced-custom-fields) to keep your ACF fields in version control with Sage.
