@@ -26,6 +26,10 @@ function sage_blocks_callback($block)
 add_action('acf/init', function () {
     if (function_exists('acf_register_block')) {
 
+      // Global $sage_error so we can throw errors in the typical sage manner
+        global $sage_error;
+
+
         // Set the directory blocks are stored in
         $template_directory = "views/blocks/";
 
@@ -50,12 +54,10 @@ add_action('acf/init', function () {
               ]);
 
                 if (empty($file_headers['title'])) {
-                    global $sage_error;
                     $sage_error(__('This block needs a title: ' . $template_directory . $fileinfo->getFilename(), 'sage'), __('Block title missing', 'sage'));
                 }
 
                 if (empty($file_headers['category'])) {
-                    global $sage_error;
                     $sage_error(__('This block needs a category: ' . $template_directory . $fileinfo->getFilename(), 'sage'), __('Block category missing', 'sage'));
                 }
 
