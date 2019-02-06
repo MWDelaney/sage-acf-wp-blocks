@@ -24,14 +24,23 @@ function sage_blocks_callback($block)
  * Create blocks based on templates found in Sage's "views/blocks" directory
  */
 add_action('acf/init', function () {
+  
+
+    // Set the directory blocks are stored in
+    $template_directory = "views/blocks/";
+  
+    // Set Sage9 friendly path at /theme-directory/resources/views/blocks
+    $path = get_stylesheet_directory() . '/' . $template_directory;
+
+    // If the directory doesn't exist, create it.
+    if (!is_dir($path)) {
+      mkdir($path);
+    }
+
     if (function_exists('acf_register_block')) {
 
       // Global $sage_error so we can throw errors in the typical sage manner
         global $sage_error;
-
-
-        // Set the directory blocks are stored in
-        $template_directory = "views/blocks/";
 
         // Get all templates in 'views/blocks'
         $dir = new \DirectoryIterator(\locate_template($template_directory));
