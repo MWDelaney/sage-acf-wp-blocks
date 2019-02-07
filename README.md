@@ -1,5 +1,5 @@
 # Sage ACF Gutenberg Blocks
-Generate ACF Gutenberg blocks just by adding templates to your Sage theme.
+Generate ACF Gutenberg blocks just by adding templates to your Sage theme. This package is based heavily on [this article](https://medium.com/nicooprat/acf-blocks-avec-gutenberg-et-sage-d8c20dab6270) by [nicoprat](https://github.com/nicooprat).
 
 ## Installation
 Run the following in your Sage 9-based theme directory:
