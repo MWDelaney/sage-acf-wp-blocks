@@ -8,7 +8,7 @@ composer require "mwdelaney/sage-acf-gutenberg-blocks"
 ```
 
 ## Creating blocks
-Add blade templates to `views/blocks` which get and use ACF data. Each block requires a a comment block with some data in it:
+Add blade templates to `views/blocks` which get and use ACF data. Each template requires a comment block with some data in it:
 ```blade
 {{--
   Title: 
