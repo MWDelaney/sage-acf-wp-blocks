@@ -55,12 +55,12 @@ add_action('acf/init', function () {
                 // Get header info from the found template file(s)
                 $file_path = locate_template("views/blocks/${slug}.blade.php");
                 $file_headers = get_file_data($file_path, [
-                'title' => 'Title',
-                'description' => 'Description',
-                'category' => 'Category',
-                'icon' => 'Icon',
-                'keywords' => 'Keywords',
-              ]);
+                  'title' => 'Title',
+                  'description' => 'Description',
+                  'category' => 'Category',
+                  'icon' => 'Icon',
+                  'keywords' => 'Keywords',
+                ]);
 
                 if (empty($file_headers['title'])) {
                     $sage_error(__('This block needs a title: ' . $template_directory . $fileinfo->getFilename(), 'sage'), __('Block title missing', 'sage'));
@@ -78,7 +78,7 @@ add_action('acf/init', function () {
                   'category' => $file_headers['category'],
                   'icon' => $file_headers['icon'],
                   'keywords' => explode(' ', $file_headers['keywords']),
-                  'render_callback'  => 'sage_blocks_callback',
+                  'render_callback'  => __NAMESPACE__.'\\sage_blocks_callback',
                 ];
 
                 // Register the block with ACF
