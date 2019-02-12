@@ -1,5 +1,6 @@
 {
   "name": "mwdelaney/sage-acf-gutenberg-blocks",
+  "type": "wordpress-muplugin",
   "description": "Create Gutenberg blocks from Sage blade templates and ACF fields.",
   "keywords": ["wordpress", "gutenberg", "advanced custom fields"],
   "homepage": "https://github.com/MWDelaney/sage-acf-gutenberg-blocks",
@@ -11,12 +12,14 @@
     },
     {
       "name": "Nico Prat"
-		}
+    },
+    {
+      "name": "Tang Rufus",
+      "email": "tangrufus@gmail.com",
+      "homepage": "https://typist.tech/"
+    }
   ],
   "require": {
     "php": ">=5.3.2"
-  },
-	"autoload": {
-    "files": ["sage-acf-gutenberg-blocks.php"]
   }
 }
