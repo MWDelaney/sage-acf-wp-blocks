@@ -15,7 +15,6 @@ namespace App;
  */
 function sage_blocks_callback($block)
 {
-
   // Set up the slug to be useful
     $slug = str_replace('acf/', '', $block['name']);
 
@@ -32,8 +31,6 @@ function sage_blocks_callback($block)
  * Create blocks based on templates found in Sage's "views/blocks" directory
  */
 add_action('acf/init', function () {
-
-
     // Set the directory blocks are stored in
     $template_directory = "views/blocks/";
 
