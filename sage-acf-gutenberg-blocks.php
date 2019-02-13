@@ -23,67 +23,69 @@ function sage_blocks_callback($block)
 /**
  * Create blocks based on templates found in Sage's "views/blocks" directory
  */
-add_action('acf/init', function () {
-  
+if (function_exists('add_action')) {
+  add_action('acf/init', function () {
 
-    // Set the directory blocks are stored in
-    $template_directory = "views/blocks/";
-  
-    // Set Sage9 friendly path at /theme-directory/resources/views/blocks
-    $path = get_stylesheet_directory() . '/' . $template_directory;
 
-    // If the directory doesn't exist, create it.
-    if (!is_dir($path)) {
-      mkdir($path);
-    }
+      // Set the directory blocks are stored in
+      $template_directory = "views/blocks/";
 
-    if (function_exists('acf_register_block')) {
+      // Set Sage9 friendly path at /theme-directory/resources/views/blocks
+      $path = get_stylesheet_directory() . '/' . $template_directory;
 
-      // Global $sage_error so we can throw errors in the typical sage manner
-        global $sage_error;
+      // If the directory doesn't exist, create it.
+      if (!is_dir($path)) {
+        mkdir($path);
+      }
 
-        // Get all templates in 'views/blocks'
-        $dir = new \DirectoryIterator(\locate_template($template_directory));
+      if (function_exists('acf_register_block')) {
 
-        // Loop through found templates and set up data
-        foreach ($dir as $fileinfo) {
-            if (!$fileinfo->isDot()) {
+        // Global $sage_error so we can throw errors in the typical sage manner
+          global $sage_error;
 
-              // Strip the file extension to get the slug
-                $slug = str_replace('.blade.php', '', $fileinfo->getFilename());
+          // Get all templates in 'views/blocks'
+          $dir = new \DirectoryIterator(\locate_template($template_directory));
 
-                // Get header info from the found template file(s)
-                $file_path = locate_template("views/blocks/${slug}.blade.php");
-                $file_headers = get_file_data($file_path, [
-                  'title' => 'Title',
-                  'description' => 'Description',
-                  'category' => 'Category',
-                  'icon' => 'Icon',
-                  'keywords' => 'Keywords',
-                ]);
+          // Loop through found templates and set up data
+          foreach ($dir as $fileinfo) {
+              if (!$fileinfo->isDot()) {
 
-                if (empty($file_headers['title'])) {
-                    $sage_error(__('This block needs a title: ' . $template_directory . $fileinfo->getFilename(), 'sage'), __('Block title missing', 'sage'));
-                }
+                // Strip the file extension to get the slug
+                  $slug = str_replace('.blade.php', '', $fileinfo->getFilename());
 
-                if (empty($file_headers['category'])) {
-                    $sage_error(__('This block needs a category: ' . $template_directory . $fileinfo->getFilename(), 'sage'), __('Block category missing', 'sage'));
-                }
+                  // Get header info from the found template file(s)
+                  $file_path = locate_template("views/blocks/${slug}.blade.php");
+                  $file_headers = get_file_data($file_path, [
+                    'title' => 'Title',
+                    'description' => 'Description',
+                    'category' => 'Category',
+                    'icon' => 'Icon',
+                    'keywords' => 'Keywords',
+                  ]);
 
-                // Set up block data for registration
-                $data = [
-                  'name' => $slug,
-                  'title' => $file_headers['title'],
-                  'description' => $file_headers['description'],
-                  'category' => $file_headers['category'],
-                  'icon' => $file_headers['icon'],
-                  'keywords' => explode(' ', $file_headers['keywords']),
-                  'render_callback'  => __NAMESPACE__.'\\sage_blocks_callback',
-                ];
+                  if (empty($file_headers['title'])) {
+                      $sage_error(__('This block needs a title: ' . $template_directory . $fileinfo->getFilename(), 'sage'), __('Block title missing', 'sage'));
+                  }
 
-                // Register the block with ACF
-                acf_register_block($data);
-            }
-        }
-    }
-});
+                  if (empty($file_headers['category'])) {
+                      $sage_error(__('This block needs a category: ' . $template_directory . $fileinfo->getFilename(), 'sage'), __('Block category missing', 'sage'));
+                  }
+
+                  // Set up block data for registration
+                  $data = [
+                    'name' => $slug,
+                    'title' => $file_headers['title'],
+                    'description' => $file_headers['description'],
+                    'category' => $file_headers['category'],
+                    'icon' => $file_headers['icon'],
+                    'keywords' => explode(' ', $file_headers['keywords']),
+                    'render_callback'  => __NAMESPACE__.'\\sage_blocks_callback',
+                  ];
+
+                  // Register the block with ACF
+                  acf_register_block($data);
+              }
+          }
+      }
+  });
+}
