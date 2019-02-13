@@ -26,7 +26,6 @@ function sage_blocks_callback($block)
 if (function_exists('add_action')) {
   add_action('acf/init', function () {
 
-
       // Set the directory blocks are stored in
       $template_directory = "views/blocks/";
 
