@@ -31,6 +31,13 @@ add_action('acf/init', function () {
 
     // Check whether ACF exists before continuing
     foreach ($directories as $dir) {
+        
+        // Sanity check whether the directory we're iterating over exists first
+        if (!file_exists(locate_template($dir))) {
+            return;
+        }
+        
+        // Iterate over the directories provided and look for templates
         $template_directory = new \DirectoryIterator(\locate_template($dir));
 
         foreach ($template_directory as $template) {
