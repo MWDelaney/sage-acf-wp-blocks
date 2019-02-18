@@ -33,7 +33,7 @@ add_action('acf/init', function () {
     foreach ($directories as $dir) {
         
         // Sanity check whether the directory we're iterating over exists first
-        if (!file_exists(locate_template($dir))) {
+        if (!file_exists(\locate_template($dir))) {
             return;
         }
         
