@@ -93,7 +93,7 @@ function sage_blocks_callback($block)
 
     // Set up the block data
     $block['slug'] = $slug;
-    $block['classes'] = implode(' ', [$block['slug'], $block['className'], $block['align']]);
+    $block['classes'] = implode(' ', [$block['slug'], $block['className'], 'align'.$block['align']]);
 
     // Use Sage's template() function to echo the block and populate it with data
     echo \App\template("blocks/${slug}", ['block' => $block]);
