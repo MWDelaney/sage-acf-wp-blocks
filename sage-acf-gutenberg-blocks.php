@@ -31,12 +31,12 @@ add_action('acf/init', function () {
 
     // Check whether ACF exists before continuing
     foreach ($directories as $dir) {
-        
+
         // Sanity check whether the directory we're iterating over exists first
         if (!file_exists(\locate_template($dir))) {
             return;
         }
-        
+
         // Iterate over the directories provided and look for templates
         $template_directory = new \DirectoryIterator(\locate_template($dir));
 
@@ -54,6 +54,8 @@ add_action('acf/init', function () {
                       'category' => 'Category',
                       'icon' => 'Icon',
                       'keywords' => 'Keywords',
+                      'mode' => 'Mode',
+                      'post_types' => 'PostTypes',
                     ]);
 
                 if (empty($file_headers['title'])) {
@@ -72,8 +74,14 @@ add_action('acf/init', function () {
                       'category' => $file_headers['category'],
                       'icon' => $file_headers['icon'],
                       'keywords' => explode(' ', $file_headers['keywords']),
+                      'mode' => $file_headers['mode'],
                       'render_callback'  => __NAMESPACE__.'\\sage_blocks_callback',
                     ];
+
+                // If the PostTypes header is set in the template, restrict this block to thsoe types
+                if (!empty($file_headers['post_types'])) {
+                    $data['post_types'] = explode(' ', $file_headers['post_types']);
+                }
 
                 // Register the block with ACF
                 \acf_register_block($data);
