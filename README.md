@@ -31,7 +31,7 @@ Add blade templates to `views/blocks` which get and use ACF data. Each template 
   Icon: admin-comments
   Keywords: testimonial quote
   Mode: edit
-  PostTypes: page, post
+  PostTypes: page post
 --}}
 
 <blockquote data-{{ $block['id'] }} class="{{ $block['classes'] }}">
