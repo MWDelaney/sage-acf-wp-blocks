@@ -97,7 +97,8 @@ function sage_blocks_callback($block)
 {
 
   // Set up the slug to be useful
-    $slug = str_replace('acf/', '', $block['name']);
+    $slug  = str_replace('acf/', '', $block['name']);
+    $block = array_merge(['className' => ''], $block);
 
     // Set up the block data
     $block['slug'] = $slug;
