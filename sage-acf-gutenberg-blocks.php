@@ -55,7 +55,11 @@ add_action('acf/init', function () {
                       'icon' => 'Icon',
                       'keywords' => 'Keywords',
                       'mode' => 'Mode',
+                      'align' => 'Align',
                       'post_types' => 'PostTypes',
+                      'supports_align' => 'SupportsAlign',
+                      'supports_mode' => 'SupportsMode',
+                      'supports_multiple' => 'SupportsMultiple',
                     ]);
 
                 if (empty($file_headers['title'])) {
@@ -78,9 +82,24 @@ add_action('acf/init', function () {
                       'render_callback'  => __NAMESPACE__.'\\sage_blocks_callback',
                     ];
 
-                // If the PostTypes header is set in the template, restrict this block to thsoe types
+                // If the PostTypes header is set in the template, restrict this block to those types
                 if (!empty($file_headers['post_types'])) {
                     $data['post_types'] = explode(' ', $file_headers['post_types']);
+                }
+
+                // If the SupportsAlign header is set in the template, restrict this block to those aligns
+                if (!empty($file_headers['supports_align'])) {
+                    $data['supports']['align'] = in_array($file_headers['supports_align'], array('true', 'false'), true) ? filter_var($file_headers['supports_align'], FILTER_VALIDATE_BOOLEAN) : explode(' ', $file_headers['supports_align']);
+                }
+
+                // If the SupportsMode header is set in the template, restrict this block mode feature
+                if (!empty($file_headers['supports_mode'])) {
+                    $data['supports']['mode'] = $file_headers['supports_mode'] === 'true' ? true : false;
+                }
+
+                // If the SupportsMultiple header is set in the template, restrict this block multiple feature
+                if (!empty($file_headers['supports_multiple'])) {
+                    $data['supports']['multiple'] = $file_headers['supports_multiple'] === 'true' ? true : false;
                 }
 
                 // Register the block with ACF
