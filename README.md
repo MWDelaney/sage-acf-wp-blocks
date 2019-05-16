@@ -11,13 +11,17 @@ composer require "mwdelaney/sage-acf-gutenberg-blocks"
 Add blade templates to `views/blocks` which get and use ACF data. Each template requires a comment block with some data in it:
 ```blade
 {{--
-  Title: 
-  Description: 
-  Category: 
-  Icon: 
+  Title:
+  Description:
+  Category:
+  Icon:
   Keywords:
   Mode:
+  Align:
   PostTypes:
+  SupportsAlign:
+  SupportsMode:
+  SupportsMultiple:
 --}}
 ```
 
@@ -31,7 +35,11 @@ Add blade templates to `views/blocks` which get and use ACF data. Each template 
   Icon: admin-comments
   Keywords: testimonial quote
   Mode: edit
+  Align: left
   PostTypes: page post
+  SupportsAlign: left right
+  SupportsMode: false
+  SupportsMultiple: false
 --}}
 
 <blockquote data-{{ $block['id'] }} class="{{ $block['classes'] }}">
