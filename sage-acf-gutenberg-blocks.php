@@ -3,7 +3,7 @@
 namespace App;
 
 // Check whether WordPress and ACF are available; bail if not.
-if (! function_exists('acf_register_block')) {
+if (! function_exists('acf_register_block_type')) {
     return;
 }
 if (! function_exists('add_filter')) {
@@ -103,7 +103,7 @@ add_action('acf/init', function () {
                 }
 
                 // Register the block with ACF
-                \acf_register_block($data);
+                \acf_register_block_type($data);
             }
         }
     }
