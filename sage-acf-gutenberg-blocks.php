@@ -60,7 +60,10 @@ add_action('acf/init', function () {
                       'supports_align' => 'SupportsAlign',
                       'supports_mode' => 'SupportsMode',
                       'supports_multiple' => 'SupportsMultiple',
-                    ]);
+                      'enqueue_style'     => 'EnqueueStyle',
+                      'enqueue_script'    => 'EnqueueScript',
+                      'enqueue_assets'    => 'EnqueueAssets',
+                ]);
 
                 if (empty($file_headers['title'])) {
                     $sage_error(__('This block needs a title: ' . $dir . '/' . $template->getFilename(), 'sage'), __('Block title missing', 'sage'));
@@ -80,6 +83,9 @@ add_action('acf/init', function () {
                       'keywords' => explode(' ', $file_headers['keywords']),
                       'mode' => $file_headers['mode'],
                       'render_callback'  => __NAMESPACE__.'\\sage_blocks_callback',
+                      'enqueue_style'   => $file_headers['enqueue_style'],
+                      'enqueue_script'  => $file_headers['enqueue_script'],
+                      'enqueue_assets'  => $file_headers['enqueue_assets'],
                     ];
 
                 // If the PostTypes header is set in the template, restrict this block to those types
