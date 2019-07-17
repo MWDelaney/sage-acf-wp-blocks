@@ -122,10 +122,8 @@ function sage_blocks_callback($block, $content = '', $is_preview = false, $post_
 {
 
   // Set up the slug to be useful
-	$slug  = str_replace('acf/', '', $block['name']);
-
-	// FIX: "Undefined index $block['className']"
-	!isset($block['className']) && $block['className'] = false;
+    $slug  = str_replace('acf/', '', $block['name']);
+    !isset($block['className']) && $block['className'] = false;
 
     $block = array_merge(['className' => ''], $block);
 
