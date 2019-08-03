@@ -73,7 +73,11 @@ add_action('acf/init', function () {
                     $sage_error(__('This block needs a category: ' . $dir . '/' . $template->getFilename(), 'sage'), __('Block category missing', 'sage'));
                 }
 
-                // If dist contains this asset then enqueue the dist version.
+                // Checks if dist contains this asset, then enqueues the dist version.
+                if (!empty($file_headers['enqueue_style'])) {
+                    checkAssetPath($file_headers['enqueue_style']);
+                }
+
                 if (!empty($file_headers['enqueue_script'])) {
                     checkAssetPath($file_headers['enqueue_script']);
                 }
@@ -153,7 +157,7 @@ function removeBladeExtension($filename)
 }
 
 /**
- * Checks asset path for compiled assets.
+ * Checks asset path for specified asset.
  *
  * @param string &$path
  *
