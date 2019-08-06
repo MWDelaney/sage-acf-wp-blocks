@@ -165,9 +165,7 @@ function removeBladeExtension($filename)
  */
 function checkAssetPath(&$path)
 {
-    $assetPath = \App\asset_path($path);
-
-    if (!preg_match("($path)", $assetPath)) {
-        $path = $assetPath;
+    if (preg_match("/^(styles|scripts)/", $path)) {
+        $path = \App\asset_path($path);
     }
 }
