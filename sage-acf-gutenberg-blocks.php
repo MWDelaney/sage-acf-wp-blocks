@@ -132,7 +132,7 @@ function sage_blocks_callback($block, $content = '', $is_preview = false, $post_
     $block['classes'] = [$slug, $block['className'], 'align'.$block['align']];
 
     // Filter the block data.
-    apply_filters("sage/blocks/$slug/data", $block);
+    $block = apply_filters("sage/blocks/$slug/data", $block);
 
     // Join up the classes.
     $block['classes'] = implode(' ', array_filter($block['classes']));
