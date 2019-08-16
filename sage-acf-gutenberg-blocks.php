@@ -121,14 +121,21 @@ add_action('acf/init', function () {
 function sage_blocks_callback($block, $content = '', $is_preview = false, $post_id = 0)
 {
 
-  // Set up the slug to be useful
+    // Set up the slug to be useful
     $slug  = str_replace('acf/', '', $block['name']);
     $block = array_merge(['className' => ''], $block);
 
     // Set up the block data
     $block['post_id'] = $post_id;
     $block['slug'] = $slug;
-    $block['classes'] = implode(' ', [$block['slug'], $block['className'], 'align'.$block['align']]);
+    // Send classes as array to filter for easy manipulation.
+    $block['classes'] = [$slug, $block['className'], 'align'.$block['align']];
+
+    // Filter the block data.
+    apply_filters("sage/blocks/$slug/data", $block);
+
+    // Join up the classes.
+    $block['classes'] = implode(' ', array_filter($block['classes']));
 
     // Use Sage's template() function to echo the block and populate it with data
     echo \App\template("blocks/${slug}", ['block' => $block]);
