@@ -127,6 +127,8 @@ function sage_blocks_callback($block, $content = '', $is_preview = false, $post_
 
     // Set up the block data
     $block['post_id'] = $post_id;
+    $block['is_preview'] = $is_preview;
+    $block['content'] = $content;
     $block['slug'] = $slug;
     $block['classes'] = implode(' ', [$block['slug'], $block['className'], 'align'.$block['align']]);
 
