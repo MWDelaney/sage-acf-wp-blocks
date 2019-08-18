@@ -41,6 +41,7 @@ add_action('acf/init', function () {
 
         foreach ($template_directory as $template) {
             if (!$template->isDot() && !$template->isDir()) {
+
                 // Strip the file extension to get the slug
                 $slug = removeBladeExtension($template->getFilename());
                 // If there is no slug (most likely because the filename does
@@ -52,20 +53,20 @@ add_action('acf/init', function () {
                 // Get header info from the found template file(s)
                 $file_path = locate_template($dir."/${slug}.blade.php");
                 $file_headers = get_file_data($file_path, [
-                      'title' => 'Title',
-                      'description' => 'Description',
-                      'category' => 'Category',
-                      'icon' => 'Icon',
-                      'keywords' => 'Keywords',
-                      'mode' => 'Mode',
-                      'align' => 'Align',
-                      'post_types' => 'PostTypes',
-                      'supports_align' => 'SupportsAlign',
-                      'supports_mode' => 'SupportsMode',
-                      'supports_multiple' => 'SupportsMultiple',
-                      'enqueue_style'     => 'EnqueueStyle',
-                      'enqueue_script'    => 'EnqueueScript',
-                      'enqueue_assets'    => 'EnqueueAssets',
+                    'title' => 'Title',
+                    'description' => 'Description',
+                    'category' => 'Category',
+                    'icon' => 'Icon',
+                    'keywords' => 'Keywords',
+                    'mode' => 'Mode',
+                    'align' => 'Align',
+                    'post_types' => 'PostTypes',
+                    'supports_align' => 'SupportsAlign',
+                    'supports_mode' => 'SupportsMode',
+                    'supports_multiple' => 'SupportsMultiple',
+                    'enqueue_style'     => 'EnqueueStyle',
+                    'enqueue_script'    => 'EnqueueScript',
+                    'enqueue_assets'    => 'EnqueueAssets',
                 ]);
 
                 if (empty($file_headers['title'])) {
@@ -76,20 +77,29 @@ add_action('acf/init', function () {
                     $sage_error(__('This block needs a category: ' . $dir . '/' . $template->getFilename(), 'sage'), __('Block category missing', 'sage'));
                 }
 
+                // Checks if dist contains this asset, then enqueues the dist version.
+                if (!empty($file_headers['enqueue_style'])) {
+                    checkAssetPath($file_headers['enqueue_style']);
+                }
+
+                if (!empty($file_headers['enqueue_script'])) {
+                    checkAssetPath($file_headers['enqueue_script']);
+                }
+
                 // Set up block data for registration
                 $data = [
-                      'name' => $slug,
-                      'title' => $file_headers['title'],
-                      'description' => $file_headers['description'],
-                      'category' => $file_headers['category'],
-                      'icon' => $file_headers['icon'],
-                      'keywords' => explode(' ', $file_headers['keywords']),
-                      'mode' => $file_headers['mode'],
-                      'render_callback'  => __NAMESPACE__.'\\sage_blocks_callback',
-                      'enqueue_style'   => $file_headers['enqueue_style'],
-                      'enqueue_script'  => $file_headers['enqueue_script'],
-                      'enqueue_assets'  => $file_headers['enqueue_assets'],
-                    ];
+                    'name' => $slug,
+                    'title' => $file_headers['title'],
+                    'description' => $file_headers['description'],
+                    'category' => $file_headers['category'],
+                    'icon' => $file_headers['icon'],
+                    'keywords' => explode(' ', $file_headers['keywords']),
+                    'mode' => $file_headers['mode'],
+                    'render_callback'  => __NAMESPACE__.'\\sage_blocks_callback',
+                    'enqueue_style'   => $file_headers['enqueue_style'],
+                    'enqueue_script'  => $file_headers['enqueue_script'],
+                    'enqueue_assets'  => $file_headers['enqueue_assets'],
+                ];
 
                 // If the PostTypes header is set in the template, restrict this block to those types
                 if (!empty($file_headers['post_types'])) {
@@ -124,12 +134,14 @@ add_action('acf/init', function () {
 function sage_blocks_callback($block, $content = '', $is_preview = false, $post_id = 0)
 {
 
-  // Set up the slug to be useful
+    // Set up the slug to be useful
     $slug  = str_replace('acf/', '', $block['name']);
     $block = array_merge(['className' => ''], $block);
 
     // Set up the block data
     $block['post_id'] = $post_id;
+    $block['is_preview'] = $is_preview;
+    $block['content'] = $content;
     $block['slug'] = $slug;
     $block['classes'] = implode(' ', [$block['slug'], $block['className'], 'align'.$block['align']]);
 
@@ -151,4 +163,18 @@ function removeBladeExtension($filename)
     }
     // Return FALSE if the filename doesn't match the pattern.
     return FALSE;
+}
+
+/**
+ * Checks asset path for specified asset.
+ *
+ * @param string &$path
+ *
+ * @return void
+ */
+function checkAssetPath(&$path)
+{
+    if (preg_match("/^(styles|scripts)/", $path)) {
+        $path = \App\asset_path($path);
+    }
 }
