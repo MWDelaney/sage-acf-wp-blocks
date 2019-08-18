@@ -31,7 +31,6 @@ add_action('acf/init', function () {
 
     // Check whether ACF exists before continuing
     foreach ($directories as $dir) {
-
         // Sanity check whether the directory we're iterating over exists first
         if (!file_exists(\locate_template($dir))) {
             return;
@@ -45,6 +44,11 @@ add_action('acf/init', function () {
 
                 // Strip the file extension to get the slug
                 $slug = removeBladeExtension($template->getFilename());
+                // If there is no slug (most likely because the filename does
+                // not end with ".blade.php", move on to the next file.
+                if (!$slug) {
+                    continue;
+                }
 
                 // Get header info from the found template file(s)
                 $file_path = locate_template($dir."/${slug}.blade.php");
@@ -150,12 +154,15 @@ function sage_blocks_callback($block, $content = '', $is_preview = false, $post_
  */
 function removeBladeExtension($filename)
 {
-
-    // Remove the unwanted extensions
-    $return = substr($filename, 0, strrpos($filename, '.blade.php'));
-
-    // Always return
-    return $return;
+    // Filename must end with ".blade.php". Parenthetical captures the slug.
+    $blade_pattern = '/(.*)\.blade\.php$/';
+    $matches = [];
+    // If the filename matches the pattern, return the slug.
+    if (preg_match($blade_pattern, $filename, $matches)) {
+        return $matches[1];
+    }
+    // Return FALSE if the filename doesn't match the pattern.
+    return FALSE;
 }
 
 /**
