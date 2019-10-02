@@ -95,6 +95,7 @@ add_action('acf/init', function () {
                     'icon' => $file_headers['icon'],
                     'keywords' => explode(' ', $file_headers['keywords']),
                     'mode' => $file_headers['mode'],
+                    'align' => $file_headers['align'],
                     'render_callback'  => __NAMESPACE__.'\\sage_blocks_callback',
                     'enqueue_style'   => $file_headers['enqueue_style'],
                     'enqueue_script'  => $file_headers['enqueue_script'],
