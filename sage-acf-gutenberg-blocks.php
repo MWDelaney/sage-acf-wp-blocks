@@ -95,6 +95,7 @@ add_action('acf/init', function () {
                     'icon' => $file_headers['icon'],
                     'keywords' => explode(' ', $file_headers['keywords']),
                     'mode' => $file_headers['mode'],
+                    'align' => $file_headers['align'],
                     'render_callback'  => __NAMESPACE__.'\\sage_blocks_callback',
                     'enqueue_style'   => $file_headers['enqueue_style'],
                     'enqueue_script'  => $file_headers['enqueue_script'],
@@ -144,7 +145,12 @@ function sage_blocks_callback($block, $content = '', $is_preview = false, $post_
     $block['content'] = $content;
     $block['slug'] = $slug;
     // Send classes as array to filter for easy manipulation.
-    $block['classes'] = [$slug, $block['className'], 'align'.$block['align']];
+    $block['classes'] = [
+      $slug,
+      $block['className'],
+      $block['is_preview'] ? 'is-preview' : null,
+      'align'.$block['align']
+    ];
 
     // Filter the block data.
     $block = apply_filters("sage/blocks/$slug/data", $block);
