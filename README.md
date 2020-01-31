@@ -22,6 +22,9 @@ Add blade templates to `views/blocks` which get and use ACF data. Each template 
   SupportsAlign:
   SupportsMode:
   SupportsMultiple:
+  EnqueueStyle:
+  EnqueueScript:
+  EnqueueAssets:
 --}}
 ```
 
@@ -40,6 +43,9 @@ Add blade templates to `views/blocks` which get and use ACF data. Each template 
   SupportsAlign: left right
   SupportsMode: false
   SupportsMultiple: false
+  EnqueueStyle: styles/style.css
+  EnqueueScript: scripts/script.js
+  EnqueueAssets: path/to/asset
 --}}
 
 <blockquote data-{{ $block['id'] }} class="{{ $block['classes'] }}">
