@@ -197,7 +197,7 @@ function removeBladeExtension($filename)
 function checkAssetPath(&$path)
 {
     if (preg_match("/^(styles|scripts)/", $path)) {
-        $path = \App\asset_path($path);
+        $path = isSage10() ? \Roots\asset($path)->uri() : \App\asset_path($path);
     }
 }
 
