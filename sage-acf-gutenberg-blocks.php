@@ -15,7 +15,11 @@ if (! function_exists('add_action')) {
 
 // Add the default blocks location, 'views/blocks', via filter
 add_filter('sage-acf-gutenberg-blocks-templates', function () {
-    return array('views/blocks');
+    $blocksDir = 'views/blocks';
+    if (isSage10()) {
+        $blocksDir = "resources/$blocksDir";
+    }
+    return array($blocksDir);
 });
 
 /**
@@ -146,10 +150,10 @@ function sage_blocks_callback($block, $content = '', $is_preview = false, $post_
     $block['slug'] = $slug;
     // Send classes as array to filter for easy manipulation.
     $block['classes'] = [
-      $slug,
-      $block['className'],
-      $block['is_preview'] ? 'is-preview' : null,
-      'align'.$block['align']
+        $slug,
+        $block['className'],
+        $block['is_preview'] ? 'is-preview' : null,
+        'align'.$block['align']
     ];
 
     // Filter the block data.
@@ -158,8 +162,13 @@ function sage_blocks_callback($block, $content = '', $is_preview = false, $post_
     // Join up the classes.
     $block['classes'] = implode(' ', array_filter($block['classes']));
 
-    // Use Sage's template() function to echo the block and populate it with data
-    echo \App\template("blocks/${slug}", ['block' => $block]);
+    if (isSage10()) {
+        // Use Sage's view() function to echo the block and populate it with data
+        echo \Roots\view("blocks/${slug}", ['block' => $block]);
+    } else {
+        // Use Sage 9's template() function to echo the block and populate it with data
+        echo \App\template("blocks/${slug}", ['block' => $block]);
+    }
 }
 
 /**
@@ -188,6 +197,16 @@ function removeBladeExtension($filename)
 function checkAssetPath(&$path)
 {
     if (preg_match("/^(styles|scripts)/", $path)) {
-        $path = \App\asset_path($path);
+        $path = isSage10() ? \Roots\asset($path)->uri() : \App\asset_path($path);
     }
+}
+
+/**
+ * Check if Sage 10 is used.
+ *
+ * @return bool
+ */
+function isSage10()
+{
+    return class_exists('Roots\Acorn\Application');
 }

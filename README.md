@@ -2,7 +2,7 @@
 Generate ACF Gutenberg blocks just by adding templates to your Sage theme. This package is based heavily on [this article](https://medium.com/nicooprat/acf-blocks-avec-gutenberg-et-sage-d8c20dab6270) by [nicoprat](https://github.com/nicooprat).
 
 ## Installation
-Run the following in your Sage 9-based theme directory:
+Run the following in your Sage (v9 or 10) based theme directory:
 ```sh
 composer require "mwdelaney/sage-acf-gutenberg-blocks"
 ```
@@ -22,6 +22,9 @@ Add blade templates to `views/blocks` which get and use ACF data. Each template 
   SupportsAlign:
   SupportsMode:
   SupportsMultiple:
+  EnqueueStyle:
+  EnqueueScript:
+  EnqueueAssets:
 --}}
 ```
 
@@ -40,6 +43,9 @@ Add blade templates to `views/blocks` which get and use ACF data. Each template 
   SupportsAlign: left right
   SupportsMode: false
   SupportsMultiple: false
+  EnqueueStyle: styles/style.css
+  EnqueueScript: scripts/script.js
+  EnqueueAssets: path/to/asset
 --}}
 
 <blockquote data-{{ $block['id'] }} class="{{ $block['classes'] }}">
