@@ -66,6 +66,7 @@ add_action('acf/init', function () {
                     'align' => 'Align',
                     'post_types' => 'PostTypes',
                     'supports_align' => 'SupportsAlign',
+                    'supports_anchor' => 'SupportsAnchor',
                     'supports_mode' => 'SupportsMode',
                     'supports_multiple' => 'SupportsMultiple',
                     'enqueue_style'     => 'EnqueueStyle',
@@ -114,6 +115,11 @@ add_action('acf/init', function () {
                 // If the SupportsAlign header is set in the template, restrict this block to those aligns
                 if (!empty($file_headers['supports_align'])) {
                     $data['supports']['align'] = in_array($file_headers['supports_align'], array('true', 'false'), true) ? filter_var($file_headers['supports_align'], FILTER_VALIDATE_BOOLEAN) : explode(' ', $file_headers['supports_align']);
+                }
+
+                // If the SupportsMode header is set in the template, restrict this block mode feature
+                if (!empty($file_headers['supports_anchor'])) {
+                    $data['supports']['anchor'] = $file_headers['supports_anchor'] === 'true' ? true : false;
                 }
 
                 // If the SupportsMode header is set in the template, restrict this block mode feature
