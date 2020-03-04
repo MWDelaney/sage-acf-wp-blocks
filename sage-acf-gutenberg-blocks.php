@@ -154,6 +154,7 @@ function sage_blocks_callback($block, $content = '', $is_preview = false, $post_
     $block['is_preview'] = $is_preview;
     $block['content'] = $content;
     $block['slug'] = $slug;
+    $block['anchor'] = isset($block['anchor']) ? $block['anchor'] : '';
     // Send classes as array to filter for easy manipulation.
     $block['classes'] = [
         $slug,
