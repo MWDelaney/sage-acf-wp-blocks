@@ -133,7 +133,7 @@ add_action('acf/init', function () {
                 }
 
                 // Register the block with ACF
-                \acf_register_block_type($data);
+                \acf_register_block_type( apply_filters( "sage/blocks/$slug/register-data", $data ) );
             }
         }
     }
