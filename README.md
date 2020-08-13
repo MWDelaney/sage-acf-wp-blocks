@@ -90,3 +90,13 @@ Block data can be altered via the 'sage/blocks/[block-name]/data' filter. For ex
 ```php
 add_filter('sage/blocks/my-block/data', function ($block) { // Do your thing here. });
 ```
+
+## Filter template folders
+By default all your template files in `views/blocks` will be loaded. You can use the templates filter to add more folders if you wish. See an example below of how to add your own folders.
+
+```php
+add_filter('sage-acf-gutenberg-blocks-templates', function ($folders) { 
+    $folders[] = 'views/your-folder'; // Adds your folder
+    return $folders;
+});
+```
