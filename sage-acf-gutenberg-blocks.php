@@ -32,16 +32,16 @@ add_action('acf/init', function () {
     $directories = apply_filters('sage-acf-gutenberg-blocks-templates', []);
 
     // Check whether ACF exists before continuing
-    foreach ($directories as $dir) {
-        $directory = isSage10() ? \Roots\resource_path($dir) : \locate_template($dir);
+    foreach ($directories as $directory) {
+        $dir = isSage10() ? \Roots\resource_path($directory) : \locate_template($directory);
 
         // Sanity check whether the directory we're iterating over exists first
-        if (!file_exists($directory)) {
+        if (!file_exists($dir)) {
             return;
         }
 
         // Iterate over the directories provided and look for templates
-        $template_directory = new \DirectoryIterator($directory);
+        $template_directory = new \DirectoryIterator($dir);
 
         foreach ($template_directory as $template) {
             if (!$template->isDot() && !$template->isDir()) {
@@ -55,7 +55,7 @@ add_action('acf/init', function () {
                 }
 
                 // Get header info from the found template file(s)
-                $file = "${$directory}/${slug}.blade.php";
+                $file = "${dir}/${slug}.blade.php";
                 $file_path = file_exists($file) ? $file : '';
                 $file_headers = get_file_data($file_path, [
                     'title' => 'Title',
@@ -183,7 +183,7 @@ function sage_blocks_callback($block, $content = '', $is_preview = false, $post_
 
         } else {
             // Use Sage 9's template() function to echo the block and populate it with data
-            echo \App\template("{$directory}/${slug}", ['block' => $block]);
+            echo \App\template("${directory}/${slug}", ['block' => $block]);
         }
     }
 }
