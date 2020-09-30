@@ -68,9 +68,9 @@ Add blade templates to `views/blocks` which get and use ACF data. Each template 
 The options in the file header map to options in the [`acf_register_block_type`  function](https://www.advancedcustomfields.com/resources/acf_register_block_type/).
 
 | Field              | Description                                      | Values     | Notes |
-| ------------------ | ------------------------------------------------ | ---------- | ----  | 
+| ------------------ | ------------------------------------------------ | ---------- | ----  |
 | `Title`            | Title of the block in the gutenberg editor | i.e. `Testimonial` | _required_ |
-| `Description`      | Description of the block in the gutenberg editor | i.e. `My testimonial block` | _optional_ | 
+| `Description`      | Description of the block in the gutenberg editor | i.e. `My testimonial block` | _optional_ |
 | `Category`         | Category to store the block in. Use these values or [register your own custom block categories](https://wordpress.org/gutenberg/handbook/extensibility/extending-blocks/#managing-block-categories) | `common`, `formatting`, `layout`, `widgets`, `embed` | _required_ |
 | `Icon`             | An icon property can be specified to make it easier to identify a block. Uses [dashicons](https://developer.wordpress.org/resource/dashicons/) | i.e. `book-alt` | _optional_ |
 | `Keywords`         | An array of search terms to help user discover the block while searching. Sepearate values with a space. | i.e. `quote mention cite` | _optional_ |
@@ -79,7 +79,10 @@ The options in the file header map to options in the [`acf_register_block_type` 
 | `PostTypes`        | An array of post types to restrict this block type to. Sepearate values with a space. | i.e. `post page` |
 | `SupportsAlign`    | This property adds block controls which allow the user to change the block’s alignment. Set to true to show  all alignments, false to hide the alignment toolbar. Set to an array (strings separated by spaces) of specific alignment names to customize the toolbar. | (boolean) `true`, `false`<br> or (array) `left center right wide full` | _optional_ (defaults to true) |
 | `SupportsMode`     | This property allows the user to toggle between edit and preview modes via a button. | `true`  or `false` |_optional_ (defaults to `true`) |
-| `SupportsMultiple` |This property allows the block to be added multiple times. | `true`  or `false` |_optional_ (defaults to `true`) |
+| `SupportsMultiple` | This property allows the block to be added multiple times. | `true`  or `false` |_optional_ (defaults to `true`) |
+| `SupportsInnerBlocks` | This property allows the block to support the nesting of other blocks within it. | `true`  or `false` |_optional_ (defaults to `false`) |
+| `SupportsAlignText` | This property adds an alignment toolbar button similar to that seen when editing a paragraph of text. | `true`  or `false` |_optional_ (defaults to `false`) |
+| `SupportsAlignContent` | This property adds an alignment toolbar button similar to that seen when editing a core "Cover block" | `true`  or `false` |_optional_ (defaults to `false`) |
 
 ## Creating ACF fields
 Once a block is created you'll be able to assign ACF fields to it using the standard Custom Fields interface in WordPress. We recommend using [sage-advanced-custom-fields](https://github.com/MWDelaney/sage-advanced-custom-fields) to keep your ACF fields in version control with Sage.

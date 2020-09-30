@@ -69,6 +69,9 @@ add_action('acf/init', function () {
                     'supports_align' => 'SupportsAlign',
                     'supports_anchor' => 'SupportsAnchor',
                     'supports_mode' => 'SupportsMode',
+                    'supports_jsx' => 'SupportsInnerBlocks',
+                    'supports_align_text' => 'SupportsAlignText',
+                    'supports_align_content' => 'SupportsAlignContent',
                     'supports_multiple' => 'SupportsMultiple',
                     'enqueue_style'     => 'EnqueueStyle',
                     'enqueue_script'    => 'EnqueueScript',
@@ -126,6 +129,21 @@ add_action('acf/init', function () {
                 // If the SupportsMode header is set in the template, restrict this block mode feature
                 if (!empty($file_headers['supports_mode'])) {
                     $data['supports']['mode'] = $file_headers['supports_mode'] === 'true' ? true : false;
+                }
+
+                // If the SupportsInnerBlocks header is set in the template, restrict this block mode feature
+                if (!empty($file_headers['supports_jsx'])) {
+                   $data['supports']['jsx'] = $file_headers['supports_jsx'] === 'true' ? true : false;
+                }
+
+                // If the SupportsAlignText header is set in the template, restrict this block mode feature
+                if (!empty($file_headers['supports_align_text'])) {
+                   $data['supports']['align_text'] = $file_headers['supports_align_text'] === 'true' ? true : false;
+                }
+
+                // If the SupportsAlignContent header is set in the template, restrict this block mode feature
+                if (!empty($file_headers['supports_align_text'])) {
+                   $data['supports']['align_content'] = $file_headers['supports_align_content'] === 'true' ? true : false;
                 }
 
                 // If the SupportsMultiple header is set in the template, restrict this block multiple feature
