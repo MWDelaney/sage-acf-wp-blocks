@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Illuminate\Support\Str;
+
 // Check whether WordPress and ACF are available; bail if not.
 if (! function_exists('acf_register_block_type')) {
     return;
@@ -15,11 +17,7 @@ if (! function_exists('add_action')) {
 
 // Add the default blocks location, 'views/blocks', via filter
 add_filter('sage-acf-gutenberg-blocks-templates', function () {
-    $blocksDir = 'views/blocks';
-    if (isSage10()) {
-        $blocksDir = "resources/$blocksDir";
-    }
-    return array($blocksDir);
+    return ['views/blocks'];
 });
 
 /**
@@ -34,14 +32,16 @@ add_action('acf/init', function () {
     $directories = apply_filters('sage-acf-gutenberg-blocks-templates', []);
 
     // Check whether ACF exists before continuing
-    foreach ($directories as $dir) {
+    foreach ($directories as $directory) {
+        $dir = isSage10() ? \Roots\resource_path($directory) : \locate_template($directory);
+
         // Sanity check whether the directory we're iterating over exists first
-        if (!file_exists(\locate_template($dir))) {
+        if (!file_exists($dir)) {
             return;
         }
 
         // Iterate over the directories provided and look for templates
-        $template_directory = new \DirectoryIterator(\locate_template($dir));
+        $template_directory = new \DirectoryIterator($dir);
 
         foreach ($template_directory as $template) {
             if (!$template->isDot() && !$template->isDir()) {
@@ -55,7 +55,8 @@ add_action('acf/init', function () {
                 }
 
                 // Get header info from the found template file(s)
-                $file_path = locate_template($dir."/${slug}.blade.php");
+                $file = "${dir}/${slug}.blade.php";
+                $file_path = file_exists($file) ? $file : '';
                 $file_headers = get_file_data($file_path, [
                     'title' => 'Title',
                     'description' => 'Description',
@@ -144,7 +145,6 @@ add_action('acf/init', function () {
  */
 function sage_blocks_callback($block, $content = '', $is_preview = false, $post_id = 0)
 {
-
     // Set up the slug to be useful
     $slug  = str_replace('acf/', '', $block['name']);
     $block = array_merge(['className' => ''], $block);
@@ -169,12 +169,22 @@ function sage_blocks_callback($block, $content = '', $is_preview = false, $post_
     // Join up the classes.
     $block['classes'] = implode(' ', array_filter($block['classes']));
 
-    if (isSage10()) {
-        // Use Sage's view() function to echo the block and populate it with data
-        echo \Roots\view("blocks/${slug}", ['block' => $block]);
-    } else {
-        // Use Sage 9's template() function to echo the block and populate it with data
-        echo \App\template("blocks/${slug}", ['block' => $block]);
+    // Get the template directories.
+    $directories = apply_filters('sage-acf-gutenberg-blocks-templates', []);
+
+    foreach ($directories as $directory) {
+        if (isSage10()) {
+            $view = Str::replaceFirst('views/', '', $directory) . '/' . $slug;
+
+            if (\Roots\view()->exists($view)) {
+                // Use Sage's view() function to echo the block and populate it with data
+                echo \Roots\view($view, ['block' => $block]);
+            }
+
+        } else {
+            // Use Sage 9's template() function to echo the block and populate it with data
+            echo \App\template("${directory}/${slug}", ['block' => $block]);
+        }
     }
 }
 
