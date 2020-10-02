@@ -191,8 +191,9 @@ function sage_blocks_callback($block, $content = '', $is_preview = false, $post_
     $directories = apply_filters('sage-acf-gutenberg-blocks-templates', []);
 
     foreach ($directories as $directory) {
+        $view = ltrim($directory, 'views/') . '/' . $slug;
+
         if (isSage10()) {
-            $view = Str::replaceFirst('views/', '', $directory) . '/' . $slug;
 
             if (\Roots\view()->exists($view)) {
                 // Use Sage's view() function to echo the block and populate it with data
@@ -201,7 +202,7 @@ function sage_blocks_callback($block, $content = '', $is_preview = false, $post_
 
         } else {
             // Use Sage 9's template() function to echo the block and populate it with data
-            echo \App\template("${directory}/${slug}", ['block' => $block]);
+            echo \App\template($view, ['block' => $block]);
         }
     }
 }
