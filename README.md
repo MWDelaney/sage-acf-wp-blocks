@@ -98,8 +98,8 @@ add_filter('sage/blocks/my-block/data', function ($block) { // Do your thing her
 By default all your template files in `views/blocks` will be loaded. You can use the templates filter to add more folders if you wish. See an example below of how to add your own folders.
 
 ```php
-add_filter('sage-acf-gutenberg-blocks-templates', function ($folders) { 
-    $folders[] = 'views/your-folder'; // Adds your folder
+add_filter('sage-acf-gutenberg-blocks-other-templates', function ($folders) { 
+    $folders = ['views/your-folder', 'views/your-second-folder]; // Adds your folder
     return $folders;
 });
 ```
