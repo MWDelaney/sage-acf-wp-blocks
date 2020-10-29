@@ -15,9 +15,14 @@ if (! function_exists('add_action')) {
     return;
 }
 
-// Add the default blocks location, 'views/blocks', via filter
+// Add the default blocks location
 add_filter('sage-acf-gutenberg-blocks-templates', function () {
     return ['views/blocks'];
+});
+
+// Add second filter for others locations, in filter add as array
+add_filter('sage-acf-gutenberg-blocks-other-templates', function() {
+    return [];
 });
 
 /**
@@ -30,9 +35,13 @@ add_action('acf/init', function () {
 
     // Get an array of directories containing blocks
     $directories = apply_filters('sage-acf-gutenberg-blocks-templates', []);
+    $other_directories = apply_filters('sage-acf-gutenberg-blocks-other-templates', []);
+
+    // Merge both locations
+    $merge_directories = array_merge($directories, $other_directories);
 
     // Check whether ACF exists before continuing
-    foreach ($directories as $directory) {
+    foreach ($merge_directories as $directory) {
         $dir = isSage10() ? \Roots\resource_path($directory) : \locate_template($directory);
 
         // Sanity check whether the directory we're iterating over exists first
@@ -189,21 +198,46 @@ function sage_blocks_callback($block, $content = '', $is_preview = false, $post_
 
     // Get the template directories.
     $directories = apply_filters('sage-acf-gutenberg-blocks-templates', []);
+    $other_directories = apply_filters('sage-acf-gutenberg-blocks-other-templates', []);
 
-    foreach ($directories as $directory) {
-        if (isSage10()) {
-            $view = Str::replaceFirst('views/', '', $directory) . '/' . $slug;
+    // Merge both arrays default and for other locations
+    $merge_directories = array_merge($directories, $other_directories);
 
-            if (\Roots\view()->exists($view)) {
-                // Use Sage's view() function to echo the block and populate it with data
-                echo \Roots\view($view, ['block' => $block]);
-            }
+    // Foreach merge direction arrays
+    foreach ($merge_directories as $directory) {
 
-        } else {
-            // Use Sage 9's template() function to echo the block and populate it with data
-            echo \App\template("${directory}/${slug}", ['block' => $block]);
+        // get path for each block
+        $dirs = isSage10() ? \Roots\resource_path($directory) : \locate_template($directory);
+
+        $template_directory = new \DirectoryIterator($dirs);
+
+        // foreach all blocks paths
+        foreach ($template_directory as $template) {
+
+           if (!$template->isDot() && !$template->isDir()) {
+           $slug = removeBladeExtension($template->getFilename());
+
+           // remove view/ folder and add slug
+           $view = Str::replaceFirst('views/', '', $directory) . '/' . $slug;
+
+            if (isSage10()) {
+
+                $view = Str::replaceFirst('views/', '', $directory) . '/' . $slug;
+
+                if (\Roots\view()->exists($view)) {
+                    // Use Sage's view() function to echo the block and populate it with data
+                    echo \Roots\view($view, ['block' => $block]);
+                }
+
+                } else {
+                    // Use Sage 9's template() function to echo the block and populate it with data
+                    echo \App\template("${view}", ['block' => $block]);
+                }
+
+           }
         }
     }
+
 }
 
 /**
