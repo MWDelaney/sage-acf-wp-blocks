@@ -2,8 +2,6 @@
 
 namespace App;
 
-use Illuminate\Support\Str;
-
 // Check whether WordPress and ACF are available; bail if not.
 if (! function_exists('acf_register_block_type')) {
     return;
