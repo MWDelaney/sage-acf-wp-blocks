@@ -201,7 +201,7 @@ function sage_blocks_callback($block, $content = '', $is_preview = false, $post_
 
         } else {
             // Use Sage 9's template() function to echo the block and populate it with data
-            echo \App\template( locate_template( "${directory}/${slug}" ), ['block' => $block]);
+            echo \App\template(locate_template("${directory}/${slug}"), ['block' => $block]);
         }
     }
 }
