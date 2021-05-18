@@ -106,6 +106,11 @@ add_action('acf/init', function () {
                     'enqueue_style'   => $file_headers['enqueue_style'],
                     'enqueue_script'  => $file_headers['enqueue_script'],
                     'enqueue_assets'  => $file_headers['enqueue_assets'],
+                    'example'  => array(
+                        'attributes' => array(
+                            'mode' => 'preview',
+                        )
+                    )
                 ];
 
                 // If the PostTypes header is set in the template, restrict this block to those types
