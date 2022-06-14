@@ -25,6 +25,7 @@ Add blade templates to `views/blocks` which get and use ACF data. Each template 
   EnqueueStyle:
   EnqueueScript:
   EnqueueAssets:
+  Parent:
 --}}
 ```
 
@@ -83,6 +84,7 @@ The options in the file header map to options in the [`acf_register_block_type` 
 | `SupportsInnerBlocks` | This property allows the block to support the nesting of other blocks within it. | `true`  or `false` |_optional_ (defaults to `false`) |
 | `SupportsAlignText` | This property adds an alignment toolbar button similar to that seen when editing a paragraph of text. | `true`  or `false` |_optional_ (defaults to `false`) |
 | `SupportsAlignContent` | This property adds an alignment toolbar button similar to that seen when editing a core "Cover block" | `true`  or `false` |_optional_ (defaults to `false`) |
+| `Parent`           | An array of block types to restrict where this block can be used. Separate values with a space. | e.g. `core/column acf/parent-block` |_optional_ (defaults to usable anywhere)
 
 ## Creating ACF fields
 Once a block is created you'll be able to assign ACF fields to it using the standard Custom Fields interface in WordPress. We recommend using [sage-advanced-custom-fields](https://github.com/MWDelaney/sage-advanced-custom-fields) to keep your ACF fields in version control with Sage.
