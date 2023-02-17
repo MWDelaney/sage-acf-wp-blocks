@@ -233,8 +233,6 @@ function removeBladeExtension($filename)
  */
 function checkAssetPath(&$path, $block)
 {
-    $usesBud = true;
-
     if (isSage10() && function_exists('\Roots\bundle')) { // Bud
         try {
             $bundle = \Roots\bundle($path);
@@ -254,13 +252,11 @@ function checkAssetPath(&$path, $block)
             $path = ''; // Reset path
             return;
         } catch (\Exception $e) {
-            $usesBud = false;
+            //
         }
-    } else {
-        $usesBud = false;
     }
 
-    if (!$usesBud && preg_match("/^(styles|scripts)/", $path)) {
+    if (preg_match("/^(styles|scripts)/", $path)) {
         if (isSage10()) {
             $path = \Roots\asset($path)->uri(); // Laravel Mix (Pre-Bud Sage)
         } else {
