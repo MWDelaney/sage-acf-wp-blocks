@@ -73,6 +73,7 @@ add_action('acf/init', function () {
                     'enqueue_style'     => 'EnqueueStyle',
                     'enqueue_script'    => 'EnqueueScript',
                     'enqueue_assets'    => 'EnqueueAssets',
+                    'parent'            => 'Parent',
                 ]);
 
                 if (empty($file_headers['title'])) {
@@ -151,6 +152,13 @@ add_action('acf/init', function () {
                 // If the SupportsMultiple header is set in the template, restrict this block multiple feature
                 if (!empty($file_headers['supports_multiple'])) {
                     $data['supports']['multiple'] = $file_headers['supports_multiple'] === 'true' ? true : false;
+                }
+
+                // If the Parent header is set in the template, restrict this block to specific parent blocks
+                if (!empty($file_headers['parent'])) {
+                    $data['parent'] = array_map(function($name) {
+                        return validateBlockName($name);
+                    }, explode(' ', $file_headers['parent']));
                 }
 
                 // Register the block with ACF
@@ -234,6 +242,29 @@ function checkAssetPath(&$path)
     if (preg_match("/^(styles|scripts)/", $path)) {
         $path = isSage10() ? \Roots\asset($path)->uri() : \App\asset_path($path);
     }
+}
+
+/**
+ * Validates the format of a block name string
+ *
+ * @param string $name
+ *
+ * @return void|string
+ */
+function validateBlockName($name) {
+    global $sage_error;
+
+    // A block name can only contain lowercase alphanumeric characters and dashes, and must begin with a letter.
+    // NOTE: this cannot check whether a block is valid and registered (since others may be registered after this),
+    // it just confirms the block name format is correct.
+    if (!preg_match('/^[a-z]+\/[a-z][a-z0-9-]+$/', $name)) {
+        $sage_error(__('Invalid parent block name format: ' . $name, 'sage'), __('Invalid parent block name', 'sage'));
+
+        // Return NULL for invalid block names.
+        return null;
+    }
+
+    return $name;
 }
 
 /**
