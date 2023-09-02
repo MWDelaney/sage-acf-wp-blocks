@@ -35,7 +35,7 @@ add_action('acf/init', function () {
 
         // Sanity check whether the directory we're iterating over exists first
         if (!file_exists($dir)) {
-            return;
+            continue;
         }
 
         // Iterate over the directories provided and look for templates
