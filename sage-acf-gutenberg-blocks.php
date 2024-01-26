@@ -1,15 +1,14 @@
 <?php
 
 namespace App;
+define('SAGE_ACF_GUTENBERG_BLOCKS_VERSION', '0.8');
 
 // Check whether WordPress and ACF are available; bail if not.
-if (! function_exists('acf_register_block_type')) {
-    return;
-}
-if (! function_exists('add_filter')) {
-    return;
-}
-if (! function_exists('add_action')) {
+if (
+    !function_exists('acf_register_block_type') ||
+    !function_exists('add_filter') ||
+    !function_exists('add_action')
+) {
     return;
 }
 
@@ -35,7 +34,7 @@ add_action('acf/init', function () {
 
         // Sanity check whether the directory we're iterating over exists first
         if (!file_exists($dir)) {
-            return;
+            continue;
         }
 
         // Iterate over the directories provided and look for templates
@@ -73,6 +72,7 @@ add_action('acf/init', function () {
                     'enqueue_style'     => 'EnqueueStyle',
                     'enqueue_script'    => 'EnqueueScript',
                     'enqueue_assets'    => 'EnqueueAssets',
+                    'parent' => 'Parent',
                 ]);
 
                 if (empty($file_headers['title'])) {
@@ -85,11 +85,11 @@ add_action('acf/init', function () {
 
                 // Checks if dist contains this asset, then enqueues the dist version.
                 if (!empty($file_headers['enqueue_style'])) {
-                    checkAssetPath($file_headers['enqueue_style']);
+                    checkAssetPath($file_headers['enqueue_style'], $slug);
                 }
 
                 if (!empty($file_headers['enqueue_script'])) {
-                    checkAssetPath($file_headers['enqueue_script']);
+                    checkAssetPath($file_headers['enqueue_script'], $slug);
                 }
 
                 // Set up block data for registration
@@ -153,6 +153,13 @@ add_action('acf/init', function () {
                     $data['supports']['multiple'] = $file_headers['supports_multiple'] === 'true' ? true : false;
                 }
 
+                // If the Parent header is set in the template, restrict this block to specific parent blocks
+                if (!empty($file_headers['parent'])) {
+                    $data['parent'] = array_map(function($name) {
+                        return validateBlockName($name);
+                    }, explode(' ', $file_headers['parent']));
+                }
+
                 // Register the block with ACF
                 \acf_register_block_type(apply_filters("sage/blocks/$slug/register-data", $data));
             }
@@ -174,7 +181,7 @@ function sage_blocks_callback($block, $content = '', $is_preview = false, $post_
     $block['is_preview'] = $is_preview;
     $block['content'] = $content;
     $block['slug'] = $slug;
-    $block['anchor'] = isset($block['anchor']) ? $block['anchor'] : '';
+    $block['anchor'] = $block['anchor'] ?? '';
     // Send classes as array to filter for easy manipulation.
     $block['classes'] = [
         $slug,
@@ -194,12 +201,15 @@ function sage_blocks_callback($block, $content = '', $is_preview = false, $post_
 
     foreach ($directories as $directory) {
         $view = ltrim($directory, 'views/') . '/' . $slug;
+        $templatePath = get_stylesheet_directory() . "/$directory/$slug";
 
-        if (isSage10()) {
-            if (\Roots\view()->exists($view)) {
-                // Use Sage's view() function to echo the block and populate it with data
-                echo \Roots\view($view, ['block' => $block]);
-            }
+        if(!file_exists($templatePath.'.blade.php')){
+            continue;
+        }
+
+        if (isSage10() && \Roots\view()->exists($view)) {
+            // Use Sage's view() function to echo the block and populate it with data
+            echo \Roots\view($view, ['block' => $block]);
         } else {
             echo \App\template(locate_template("$directory/$slug"), ['block' => $block]);
         }
@@ -211,14 +221,11 @@ function sage_blocks_callback($block, $content = '', $is_preview = false, $post_
  */
 function removeBladeExtension($filename)
 {
-    // Filename must end with ".blade.php". Parenthetical captures the slug.
-    $blade_pattern = '/(.*)\.blade\.php$/';
-    $matches = [];
-    // If the filename matches the pattern, return the slug.
-    if (preg_match($blade_pattern, $filename, $matches)) {
-        return $matches[1];
+    // Use a simple string manipulation if the filename ends with ".blade.php".
+    if (substr($filename, -10) === '.blade.php') {
+        return substr($filename, 0, -10);
     }
-    // Return FALSE if the filename doesn't match the pattern.
+    // Return FALSE if the filename doesn't end with ".blade.php".
     return false;
 }
 
@@ -226,14 +233,52 @@ function removeBladeExtension($filename)
  * Checks asset path for specified asset.
  *
  * @param string &$path
+ * @param string $block
  *
  * @return void
  */
-function checkAssetPath(&$path)
+function checkAssetPath(&$path, $block)
 {
+    if (isSage10() && function_exists('\Roots\bundle')) {
+        $insertBlocks = function () use ($block, $path) {
+            if (has_block("acf/$block")) {
+                \Roots\bundle($path)->enqueue();
+            }
+        };
+
+        add_action('wp_enqueue_scripts', $insertBlocks, 50);
+        add_action('enqueue_block_editor_assets', $insertBlocks, 50);
+
+        $path = ''; // Reset path
+        return;
+    }
+
     if (preg_match("/^(styles|scripts)/", $path)) {
         $path = isSage10() ? \Roots\asset($path)->uri() : \App\asset_path($path);
     }
+}
+
+/**
+ * Validates the format of a block name string
+ *
+ * @param string $name
+ *
+ * @return void|string
+ */
+function validateBlockName($name) {
+    global $sage_error;
+
+    // A block name can only contain lowercase alphanumeric characters and dashes, and must begin with a letter.
+    // NOTE: this cannot check whether a block is valid and registered (since others may be registered after this),
+    // it just confirms the block name format is correct.
+    if (!preg_match('/^[a-z]+\/[a-z][a-z0-9-]+$/', $name)) {
+        $sage_error(__('Invalid parent block name format: ' . $name, 'sage'), __('Invalid parent block name', 'sage'));
+
+        // Return NULL for invalid block names.
+        return null;
+    }
+
+    return $name;
 }
 
 /**

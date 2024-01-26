@@ -22,9 +22,11 @@ Add blade templates to `views/blocks` which get and use ACF data. Each template 
   SupportsAlign:
   SupportsMode:
   SupportsMultiple:
+  SupportsInnerBlocks:
   EnqueueStyle:
   EnqueueScript:
   EnqueueAssets:
+  Parent:
 --}}
 ```
 
@@ -43,9 +45,11 @@ Add blade templates to `views/blocks` which get and use ACF data. Each template 
   SupportsAlign: left right
   SupportsMode: false
   SupportsMultiple: false
+  SupportsInnerBlocks: false
   EnqueueStyle: styles/style.css
   EnqueueScript: scripts/script.js
   EnqueueAssets: path/to/asset
+  Parent: core/column
 --}}
 
 <blockquote data-{{ $block['id'] }} class="{{ $block['classes'] }}">
@@ -83,6 +87,7 @@ The options in the file header map to options in the [`acf_register_block_type` 
 | `SupportsInnerBlocks` | This property allows the block to support the nesting of other blocks within it. | `true`  or `false` |_optional_ (defaults to `false`) |
 | `SupportsAlignText` | This property adds an alignment toolbar button similar to that seen when editing a paragraph of text. | `true`  or `false` |_optional_ (defaults to `false`) |
 | `SupportsAlignContent` | This property adds an alignment toolbar button similar to that seen when editing a core "Cover block" | `true`  or `false` |_optional_ (defaults to `false`) |
+| `Parent` | An array of block types to restrict where this block can be used. Separate values with a space. | e.g. `core/column acf/parent-block` |_optional_ (defaults to usable anywhere) |
 
 ## Creating ACF fields
 Once a block is created you'll be able to assign ACF fields to it using the standard Custom Fields interface in WordPress. We recommend using [sage-advanced-custom-fields](https://github.com/MWDelaney/sage-advanced-custom-fields) to keep your ACF fields in version control with Sage.
@@ -98,7 +103,7 @@ add_filter('sage/blocks/my-block/data', function ($block) { // Do your thing her
 By default all your template files in `views/blocks` will be loaded. You can use the templates filter to add more folders if you wish. See an example below of how to add your own folders.
 
 ```php
-add_filter('sage-acf-gutenberg-blocks-templates', function ($folders) { 
+add_filter('sage-acf-gutenberg-blocks-templates', function ($folders) {
     $folders[] = 'views/your-folder'; // Adds your folder
     return $folders;
 });
