@@ -4,7 +4,7 @@ Generate ACF Gutenberg blocks just by adding templates to your Sage theme. This 
 ## Installation
 Run the following in your Sage (v9 or 10) based theme directory:
 ```sh
-composer require "mwdelaney/sage-acf-gutenberg-blocks"
+composer require "larodiel/sage-acf-gutenberg-blocks"
 ```
 
 ## Creating blocks
