@@ -1,22 +1,38 @@
 {
-  "name": "mwdelaney/sage-acf-gutenberg-blocks",
-  "description": "Create Gutenberg blocks from Sage blade templates and ACF fields.",
-  "keywords": ["wordpress", "gutenberg", "advanced custom fields"],
-  "homepage": "https://github.com/MWDelaney/sage-acf-gutenberg-blocks",
+  "name": "larodiel/sage-acf-gutenberg-blocks",
+  "description": "Fork of the original Sage ACF Gutenberg Blocks project. Create Gutenberg blocks from Sage blade templates and ACF fields.",
+  "keywords": [
+    "wordpress",
+    "gutenberg",
+    "advanced custom fields"
+  ],
+  "homepage": "https://github.com/larodiel/sage-acf-wp-blocks",
   "license": "MIT",
   "authors": [
     {
       "name": "Michael W. Delaney",
-      "email": "michael@michaeldelaney.me"
+      "email": "michael@michaeldelaney.me",
+      "homepage": "https://github.com/MWDelaney",
+      "role": "Creator"
     },
     {
-      "name": "Nico Prat"
-		}
+      "name": "Nico Prat",
+      "homepage": "https://github.com/nicooprat",
+      "role": "Developer"
+    },
+    {
+      "name": "Victor Larodiel",
+      "email": "victor@larodiel.com",
+      "homepage": "https://github.com/larodiel",
+      "role": "Developer"
+    }
   ],
   "require": {
-    "php": ">=5.3.2"
+    "php": ">=7.4"
   },
-	"autoload": {
-    "files": ["sage-acf-gutenberg-blocks.php"]
+  "autoload": {
+    "files": [
+      "sage-acf-gutenberg-blocks.php"
+    ]
   }
 }
