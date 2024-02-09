@@ -68,6 +68,7 @@ add_action('acf/init', function () {
                     'supports_jsx' => 'SupportsInnerBlocks',
                     'supports_align_text' => 'SupportsAlignText',
                     'supports_align_content' => 'SupportsAlignContent',
+                    'supports_full_height' => 'SupportsFullHeight',
                     'supports_multiple' => 'SupportsMultiple',
                     'enqueue_style'     => 'EnqueueStyle',
                     'enqueue_script'    => 'EnqueueScript',
@@ -133,19 +134,24 @@ add_action('acf/init', function () {
                     $data['supports']['mode'] = filter_var($file_headers['supports_mode'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
                 }
 
-                // If the SupportsInnerBlocks header is set in the template, restrict this block mode feature
+                // If the SupportsInnerBlocks header is set in the template, enable the InnerBlocks feature
                 if (!empty($file_headers['supports_jsx'])) {
                     $data['supports']['jsx'] = filter_var($file_headers['supports_jsx'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
                 }
 
-                // If the SupportsAlignText header is set in the template, restrict this block mode feature
+                // If the SupportsAlignText header is set in the template, restrict this block align text feature
                 if (!empty($file_headers['supports_align_text'])) {
                     $data['supports']['align_text'] = filter_var($file_headers['supports_align_text'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
                 }
 
-                // If the SupportsAlignContent header is set in the template, restrict this block mode feature
+                // If the SupportsAlignContent header is set in the template, restrict this block align content feature
                 if (!empty($file_headers['supports_align_content'])) {
                     $data['supports']['align_content'] = filter_var($file_headers['supports_align_content'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+                }
+
+                // If the SupportsFullHeight header is set in the template, enables the full height button on the toolbar of a block
+                if (!empty($file_headers['supports_full_height'])) {
+                    $data['supports']['full_height'] = filter_var($file_headers['supports_full_height'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
                 }
 
                 // If the SupportsMultiple header is set in the template, restrict this block multiple feature
