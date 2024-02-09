@@ -1,5 +1,11 @@
 # Change Log
 
+## [0.8.1]
+
+- Added the option `SupportsFullHeight`
+- fix: Typos
+- fix: condition to apply supports_align_content
+
 ## [0.8]
 
 - Merged the PR [#75](https://github.com/MWDelaney/sage-acf-gutenberg-blocks/pull/75) by [@robmeijerink](https://github.com/robmeijerink)
