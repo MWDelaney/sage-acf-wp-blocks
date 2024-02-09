@@ -1,7 +1,7 @@
 <?php
 
 namespace App;
-define('SAGE_ACF_GUTENBERG_BLOCKS_VERSION', '0.8');
+define('SAGE_ACF_GUTENBERG_BLOCKS_VERSION', '0.8.1');
 
 // Check whether WordPress and ACF are available; bail if not.
 if (
@@ -125,32 +125,32 @@ add_action('acf/init', function () {
 
                 // If the SupportsMode header is set in the template, restrict this block mode feature
                 if (!empty($file_headers['supports_anchor'])) {
-                    $data['supports']['anchor'] = $file_headers['supports_anchor'] === 'true' ? true : false;
+                    $data['supports']['anchor'] = filter_var($file_headers['supports_anchor'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
                 }
 
                 // If the SupportsMode header is set in the template, restrict this block mode feature
                 if (!empty($file_headers['supports_mode'])) {
-                    $data['supports']['mode'] = $file_headers['supports_mode'] === 'true' ? true : false;
+                    $data['supports']['mode'] = filter_var($file_headers['supports_mode'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
                 }
 
                 // If the SupportsInnerBlocks header is set in the template, restrict this block mode feature
                 if (!empty($file_headers['supports_jsx'])) {
-                    $data['supports']['jsx'] = $file_headers['supports_jsx'] === 'true' ? true : false;
+                    $data['supports']['jsx'] = filter_var($file_headers['supports_jsx'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
                 }
 
                 // If the SupportsAlignText header is set in the template, restrict this block mode feature
                 if (!empty($file_headers['supports_align_text'])) {
-                    $data['supports']['align_text'] = $file_headers['supports_align_text'] === 'true' ? true : false;
+                    $data['supports']['align_text'] = filter_var($file_headers['supports_align_text'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
                 }
 
                 // If the SupportsAlignContent header is set in the template, restrict this block mode feature
-                if (!empty($file_headers['supports_align_text'])) {
-                    $data['supports']['align_content'] = $file_headers['supports_align_content'] === 'true' ? true : false;
+                if (!empty($file_headers['supports_align_content'])) {
+                    $data['supports']['align_content'] = filter_var($file_headers['supports_align_content'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
                 }
 
                 // If the SupportsMultiple header is set in the template, restrict this block multiple feature
                 if (!empty($file_headers['supports_multiple'])) {
-                    $data['supports']['multiple'] = $file_headers['supports_multiple'] === 'true' ? true : false;
+                    $data['supports']['multiple'] = filter_var($file_headers['supports_multiple'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
                 }
 
                 // If the Parent header is set in the template, restrict this block to specific parent blocks
